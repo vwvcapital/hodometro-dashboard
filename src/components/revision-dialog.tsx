@@ -13,6 +13,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Wrench, Loader2 } from "lucide-react";
 import { registerRevision } from "@/lib/api";
 import { VehicleWithRevision } from "@/types/vehicle";
@@ -25,6 +32,9 @@ interface RevisionDialogProps {
 export function RevisionDialog({ vehicle }: RevisionDialogProps) {
   const [open, setOpen] = useState(false);
   const [revisaoKm, setRevisaoKm] = useState(vehicle.HODOMETRO.toString());
+  const [revisaoTipo, setRevisaoTipo] = useState<"Completa" | "Intermediária">(
+    vehicle.nextRevisionType || "Completa"
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,12 +50,13 @@ export function RevisionDialog({ vehicle }: RevisionDialogProps) {
       return;
     }
 
-    const result = await registerRevision(vehicle.PLACA, km);
+    const result = await registerRevision(vehicle.PLACA, km, revisaoTipo);
 
     if (result.success) {
       setOpen(false);
       // Reset form
       setRevisaoKm(vehicle.HODOMETRO.toString());
+      setRevisaoTipo(vehicle.nextRevisionType || "Completa");
     } else {
       setError(result.error || "Erro ao registrar revisão");
     }
@@ -124,6 +135,28 @@ export function RevisionDialog({ vehicle }: RevisionDialogProps) {
               <p className="text-xs text-gray-500">
                 Informe a quilometragem em que a revisão foi realizada.
                 A próxima revisão será calculada automaticamente.
+              </p>
+            </div>
+
+            {/* Revision Type Selector */}
+            <div className="space-y-2">
+              <Label htmlFor="revisao-tipo" className="text-gray-700">
+                Tipo de Revisão
+              </Label>
+              <Select
+                value={revisaoTipo}
+                onValueChange={(value) => setRevisaoTipo(value as "Completa" | "Intermediária")}
+              >
+                <SelectTrigger id="revisao-tipo">
+                  <SelectValue placeholder="Selecione o tipo de revisão" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Completa">Completa</SelectItem>
+                  <SelectItem value="Intermediária">Intermediária</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-gray-500">
+                Selecione se a revisão realizada foi completa ou intermediária.
               </p>
             </div>
 

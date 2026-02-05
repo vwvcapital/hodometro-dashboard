@@ -5,6 +5,7 @@ export interface Vehicle {
   MARCA: string;
   MODELO: string;
   ULTIMA_REVISAO_KM?: number; // Km em que foi feita a última revisão
+  ULTIMA_REVISAO_TIPO?: "Completa" | "Intermediária"; // Tipo da última revisão realizada
   UPDATED_AT?: string; // Data da última atualização
 }
 
@@ -18,6 +19,7 @@ export interface RevisionInterval {
 export interface VehicleWithRevision extends Vehicle {
   revisionInterval: number;
   lastRevisionKm: number;
+  lastRevisionType?: "Completa" | "Intermediária"; // Tipo da última revisão realizada
   nextRevisionKm: number;
   kmUntilRevision: number;
   revisionStatus: "ok" | "warning" | "critical" | "overdue";

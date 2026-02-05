@@ -1,12 +1,17 @@
 import { supabase } from "@/lib/supabase";
 import { RevisionConfigRow } from "@/types/revision-config";
 
-export async function registerRevision(placa: string, revisaoKm: number) {
+export async function registerRevision(
+  placa: string, 
+  revisaoKm: number, 
+  revisaoTipo: "Completa" | "Intermediária" = "Completa"
+) {
   try {
     const { error } = await supabase
       .from("hodometro")
       .update({
         ultima_revisao_km: revisaoKm,
+        ultima_revisao_tipo: revisaoTipo,
         updated_at: new Date().toISOString(),
       })
       .eq("placa", placa);

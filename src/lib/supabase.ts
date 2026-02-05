@@ -14,6 +14,7 @@ export interface HodometroRow {
   modelo: string | null;
   hodometro_km: number;
   ultima_revisao_km: number | null;
+  ultima_revisao_tipo: "Completa" | "Intermediária" | null;
   created_at: string;
   updated_at: string;
 }
