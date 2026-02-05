@@ -1,20 +1,38 @@
-import { fetchVehicles, calculateStats, formatNumber, formatKm } from "@/lib/sheets";
+"use client";
+
+import { useVehicles } from "@/hooks/use-vehicles";
+import { calculateStats, formatNumber, formatKm } from "@/lib/sheets";
 import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { StatsCard } from "@/components/stats-card";
 import { OdometerList } from "@/components/odometer-list";
-import { Gauge, Truck, TrendingUp } from "lucide-react";
+import { Gauge, Truck, TrendingUp, Loader2 } from "lucide-react";
 
-export const revalidate = 0; // Sempre buscar dados frescos
-
-export default async function HodometrosPage() {
-  const vehicles = await fetchVehicles();
+export default function HodometrosPage() {
+  const { vehicles, loading } = useVehicles();
   const stats = calculateStats(vehicles);
 
   // Ordenar por placa
   const sortedVehicles = [...vehicles].sort((a, b) => 
     a.PLACA.localeCompare(b.PLACA)
   );
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-gray-50">
+        <Sidebar vehicleCount={0} />
+        <div className="flex flex-1 flex-col">
+          <Header />
+          <main className="flex flex-1 items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              <p className="text-gray-500">Carregando dados...</p>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">

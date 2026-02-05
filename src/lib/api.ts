@@ -1,10 +1,7 @@
-"use server";
-
 import { supabase } from "@/lib/supabase";
-import { revalidatePath } from "next/cache";
 import { RevisionConfigRow } from "@/types/revision-config";
 
-export async function registerRevisionAction(placa: string, revisaoKm: number) {
+export async function registerRevision(placa: string, revisaoKm: number) {
   try {
     const { error } = await supabase
       .from("hodometro")
@@ -19,11 +16,6 @@ export async function registerRevisionAction(placa: string, revisaoKm: number) {
       return { success: false, error: error.message };
     }
 
-    // Revalidate the pages to show updated data
-    revalidatePath("/");
-    revalidatePath("/revisoes");
-    revalidatePath("/frota");
-
     return { success: true };
   } catch (error) {
     console.error("Error registering revision:", error);
@@ -31,7 +23,7 @@ export async function registerRevisionAction(placa: string, revisaoKm: number) {
   }
 }
 
-export async function updateOdometerAction(placa: string, hodometroKm: number) {
+export async function updateOdometer(placa: string, hodometroKm: number) {
   try {
     const { error } = await supabase
       .from("hodometro")
@@ -46,10 +38,6 @@ export async function updateOdometerAction(placa: string, hodometroKm: number) {
       return { success: false, error: error.message };
     }
 
-    revalidatePath("/");
-    revalidatePath("/revisoes");
-    revalidatePath("/frota");
-
     return { success: true };
   } catch (error) {
     console.error("Error updating odometer:", error);
@@ -57,11 +45,7 @@ export async function updateOdometerAction(placa: string, hodometroKm: number) {
   }
 }
 
-// ==========================================
-// CONFIGURAÇÕES DE CICLOS DE REVISÃO
-// ==========================================
-
-export async function addRevisionConfigAction(
+export async function addRevisionConfig(
   config: Omit<RevisionConfigRow, "id" | "created_at" | "updated_at">
 ) {
   try {
@@ -79,7 +63,6 @@ export async function addRevisionConfigAction(
       return { success: false, error: error.message };
     }
 
-    revalidatePath("/configuracoes");
     return { success: true };
   } catch (error) {
     console.error("Error adding revision config:", error);
@@ -87,7 +70,7 @@ export async function addRevisionConfigAction(
   }
 }
 
-export async function updateRevisionConfigAction(
+export async function updateRevisionConfig(
   id: string,
   config: Partial<Omit<RevisionConfigRow, "id" | "created_at" | "updated_at">>
 ) {
@@ -105,8 +88,6 @@ export async function updateRevisionConfigAction(
       return { success: false, error: error.message };
     }
 
-    revalidatePath("/configuracoes");
-    revalidatePath("/revisoes");
     return { success: true };
   } catch (error) {
     console.error("Error updating revision config:", error);
@@ -114,7 +95,7 @@ export async function updateRevisionConfigAction(
   }
 }
 
-export async function deleteRevisionConfigAction(id: string) {
+export async function deleteRevisionConfig(id: string) {
   try {
     const { error } = await supabase
       .from("revision_config")
@@ -126,8 +107,6 @@ export async function deleteRevisionConfigAction(id: string) {
       return { success: false, error: error.message };
     }
 
-    revalidatePath("/configuracoes");
-    revalidatePath("/revisoes");
     return { success: true };
   } catch (error) {
     console.error("Error deleting revision config:", error);

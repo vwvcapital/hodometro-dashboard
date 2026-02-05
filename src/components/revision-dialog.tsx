@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Wrench, Loader2 } from "lucide-react";
-import { registerRevisionAction } from "@/app/actions";
+import { registerRevision } from "@/lib/api";
 import { VehicleWithRevision } from "@/types/vehicle";
 import { formatKm } from "@/lib/sheets";
 
@@ -40,7 +40,7 @@ export function RevisionDialog({ vehicle }: RevisionDialogProps) {
       return;
     }
 
-    const result = await registerRevisionAction(vehicle.PLACA, km);
+    const result = await registerRevision(vehicle.PLACA, km);
 
     if (result.success) {
       setOpen(false);

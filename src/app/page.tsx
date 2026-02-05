@@ -1,20 +1,51 @@
-import { fetchVehicles, calculateVehiclesWithRevision, calculateRevisionStats, formatNumber, fetchRevisionIntervalsFromDB } from "@/lib/sheets";
+"use client";
+
+import { useVehicles } from "@/hooks/use-vehicles";
+import { calculateRevisionStats, formatNumber } from "@/lib/sheets";
 import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { StatsCard } from "@/components/stats-card";
 import { DonutChart } from "@/components/donut-chart";
 import { RevisionTable } from "@/components/revision-table";
-import { Truck, AlertTriangle, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Truck, AlertTriangle, Clock, CheckCircle, XCircle, Loader2 } from "lucide-react";
 
-export const revalidate = 60; // Revalidate every 60 seconds
-
-export default async function DashboardPage() {
-  const [vehicles, revisionConfigs] = await Promise.all([
-    fetchVehicles(),
-    fetchRevisionIntervalsFromDB(),
-  ]);
-  const vehiclesWithRevision = calculateVehiclesWithRevision(vehicles, revisionConfigs);
+export default function DashboardPage() {
+  const { vehiclesWithRevision, loading, error } = useVehicles();
   const stats = calculateRevisionStats(vehiclesWithRevision);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-gray-50">
+        <Sidebar vehicleCount={0} />
+        <div className="flex flex-1 flex-col">
+          <Header />
+          <main className="flex flex-1 items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              <p className="text-gray-500">Carregando dados...</p>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen bg-gray-50">
+        <Sidebar vehicleCount={0} />
+        <div className="flex flex-1 flex-col">
+          <Header />
+          <main className="flex flex-1 items-center justify-center">
+            <div className="text-center">
+              <p className="text-red-500 mb-2">Erro ao carregar dados</p>
+              <p className="text-gray-500 text-sm">{error}</p>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">

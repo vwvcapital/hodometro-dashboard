@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Gauge, Check, Loader2, Pencil, X } from "lucide-react";
-import { updateOdometerAction } from "@/app/actions";
+import { updateOdometer } from "@/lib/api";
 import { Vehicle } from "@/types/vehicle";
 import { formatKm } from "@/lib/sheets";
 import { cn } from "@/lib/utils";
@@ -25,7 +25,7 @@ export function OdometerRow({ vehicle }: OdometerRowProps) {
     if (isNaN(km) || km < 0) return;
 
     setIsLoading(true);
-    const result = await updateOdometerAction(vehicle.PLACA, km);
+    const result = await updateOdometer(vehicle.PLACA, km);
     setIsLoading(false);
 
     if (result.success) {

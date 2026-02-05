@@ -1,21 +1,35 @@
-import { fetchVehicles, calculateVehiclesWithRevision, calculateRevisionStats, formatNumber, fetchRevisionIntervalsFromDB, configsToIntervals } from "@/lib/sheets";
+"use client";
+
+import { useVehicles } from "@/hooks/use-vehicles";
+import { calculateRevisionStats, formatNumber, configsToIntervals } from "@/lib/sheets";
 import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { RevisionView } from "@/components/revision-view";
 import { StatsCard } from "@/components/stats-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Clock, AlertTriangle, XCircle, Wrench } from "lucide-react";
+import { CheckCircle, Clock, AlertTriangle, XCircle, Wrench, Loader2 } from "lucide-react";
 
-export const revalidate = 60;
-
-export default async function RevisoesPage() {
-  const [vehicles, revisionConfigs] = await Promise.all([
-    fetchVehicles(),
-    fetchRevisionIntervalsFromDB(),
-  ]);
-  const vehiclesWithRevision = calculateVehiclesWithRevision(vehicles, revisionConfigs);
+export default function RevisoesPage() {
+  const { vehiclesWithRevision, revisionConfigs, loading } = useVehicles();
   const stats = calculateRevisionStats(vehiclesWithRevision);
   const REVISION_INTERVALS = configsToIntervals(revisionConfigs);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-gray-50">
+        <Sidebar vehicleCount={0} />
+        <div className="flex flex-1 flex-col">
+          <Header />
+          <main className="flex flex-1 items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              <p className="text-gray-500">Carregando dados...</p>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">

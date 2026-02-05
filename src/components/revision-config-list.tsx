@@ -29,10 +29,10 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Pencil, Trash2, Wrench, Settings2 } from "lucide-react";
 import { RevisionConfigRow } from "@/types/revision-config";
 import {
-  addRevisionConfigAction,
-  updateRevisionConfigAction,
-  deleteRevisionConfigAction,
-} from "@/app/actions";
+  addRevisionConfig,
+  updateRevisionConfig,
+  deleteRevisionConfig,
+} from "@/lib/api";
 
 interface RevisionConfigListProps {
   configs: RevisionConfigRow[];
@@ -98,7 +98,7 @@ export function RevisionConfigList({ configs }: RevisionConfigListProps) {
     if (!formBrand.trim() || !formName.trim() || !formInterval) return;
 
     startTransition(async () => {
-      await addRevisionConfigAction({
+      await addRevisionConfig({
         brand: formBrand.toUpperCase().trim(),
         revision_name: formName.trim(),
         interval_km: parseInt(formInterval),
@@ -106,6 +106,7 @@ export function RevisionConfigList({ configs }: RevisionConfigListProps) {
       });
       setIsAddDialogOpen(false);
       resetForm();
+      window.location.reload();
     });
   };
 
@@ -113,7 +114,7 @@ export function RevisionConfigList({ configs }: RevisionConfigListProps) {
     if (!editingConfig || !formBrand.trim() || !formName.trim() || !formInterval) return;
 
     startTransition(async () => {
-      await updateRevisionConfigAction(editingConfig.id, {
+      await updateRevisionConfig(editingConfig.id, {
         brand: formBrand.toUpperCase().trim(),
         revision_name: formName.trim(),
         interval_km: parseInt(formInterval),
@@ -121,12 +122,14 @@ export function RevisionConfigList({ configs }: RevisionConfigListProps) {
       });
       setEditingConfig(null);
       resetForm();
+      window.location.reload();
     });
   };
 
   const handleDelete = (id: string) => {
     startTransition(async () => {
-      await deleteRevisionConfigAction(id);
+      await deleteRevisionConfig(id);
+      window.location.reload();
     });
   };
 
