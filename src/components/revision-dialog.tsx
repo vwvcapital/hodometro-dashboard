@@ -27,9 +27,10 @@ import { formatKm } from "@/lib/sheets";
 
 interface RevisionDialogProps {
   vehicle: VehicleWithRevision;
+  onSuccess?: () => void;
 }
 
-export function RevisionDialog({ vehicle }: RevisionDialogProps) {
+export function RevisionDialog({ vehicle, onSuccess }: RevisionDialogProps) {
   const [open, setOpen] = useState(false);
   const [revisaoKm, setRevisaoKm] = useState("");
   const [revisaoTipo, setRevisaoTipo] = useState<"Completa" | "Intermediária">(
@@ -57,8 +58,10 @@ export function RevisionDialog({ vehicle }: RevisionDialogProps) {
       // Reset form
       setRevisaoKm("");
       setRevisaoTipo(vehicle.nextRevisionType || "Completa");
-      // Refresh the page to show updated data
-      window.location.reload();
+      // Call onSuccess callback to refresh data
+      if (onSuccess) {
+        onSuccess();
+      }
     } else {
       setError(result.error || "Erro ao registrar revisão");
     }

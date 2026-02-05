@@ -19,6 +19,7 @@ import { RevisionDialog } from "@/components/revision-dialog";
 interface RevisionTableProps {
   vehicles: VehicleWithRevision[];
   showAll?: boolean;
+  onRefresh?: () => void;
 }
 
 function getStatusConfig(status: VehicleWithRevision["revisionStatus"]) {
@@ -90,7 +91,7 @@ function ProgressBar({ percentage, status }: { percentage: number; status: Vehic
   );
 }
 
-export function RevisionTable({ vehicles, showAll = false }: RevisionTableProps) {
+export function RevisionTable({ vehicles, showAll = false, onRefresh }: RevisionTableProps) {
   // Ordena por status (mais urgentes primeiro) e km restante
   const sortedVehicles = [...vehicles].sort((a, b) => {
     const statusOrder = { overdue: 0, critical: 1, warning: 2, ok: 3 };
@@ -161,7 +162,7 @@ export function RevisionTable({ vehicles, showAll = false }: RevisionTableProps)
                       : `${formatKm(vehicle.kmUntilRevision)} restantes`
                     }
                   </span>
-                  <RevisionDialog vehicle={vehicle} />
+                  <RevisionDialog vehicle={vehicle} onSuccess={onRefresh} />
                 </div>
               </div>
             );
@@ -241,7 +242,7 @@ export function RevisionTable({ vehicles, showAll = false }: RevisionTableProps)
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <RevisionDialog vehicle={vehicle} />
+                      <RevisionDialog vehicle={vehicle} onSuccess={onRefresh} />
                     </TableCell>
                   </TableRow>
                 );

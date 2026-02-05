@@ -10,7 +10,7 @@ import { RevisionTable } from "@/components/revision-table";
 import { Truck, AlertTriangle, Clock, CheckCircle, XCircle, Loader2 } from "lucide-react";
 
 export default function DashboardPage() {
-  const { vehiclesWithRevision, loading, error } = useVehicles();
+  const { vehiclesWithRevision, loading, error, refresh } = useVehicles();
   const stats = calculateRevisionStats(vehiclesWithRevision);
 
   if (loading) {
@@ -116,7 +116,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Revision Table */}
-          <RevisionTable vehicles={vehiclesWithRevision} />
+          <RevisionTable vehicles={vehiclesWithRevision} onRefresh={refresh} />
         </main>
       </div>
     </div>

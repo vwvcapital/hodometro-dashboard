@@ -1,7 +1,7 @@
 "use client";
 
 import { useVehicles } from "@/hooks/use-vehicles";
-import { calculateRevisionStats, formatNumber, configsToIntervals } from "@/lib/sheets";
+import { calculateRevisionStats, formatNumber, configsToFullIntervals } from "@/lib/sheets";
 import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { RevisionView } from "@/components/revision-view";
@@ -10,9 +10,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Clock, AlertTriangle, XCircle, Wrench, Loader2 } from "lucide-react";
 
 export default function RevisoesPage() {
-  const { vehiclesWithRevision, revisionConfigs, loading } = useVehicles();
+  const { vehiclesWithRevision, revisionConfigs, loading, refresh } = useVehicles();
   const stats = calculateRevisionStats(vehiclesWithRevision);
-  const REVISION_INTERVALS = configsToIntervals(revisionConfigs);
+  const BRAND_INTERVALS = configsToFullIntervals(revisionConfigs);
 
   if (loading) {
     return (
@@ -91,18 +91,23 @@ export default function RevisoesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-2 sm:gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {REVISION_INTERVALS.filter((item, index, self) => 
-                  index === self.findIndex((t) => t.interval === item.interval && t.brand === item.brand)
-                ).slice(0, 8).map((interval) => (
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {BRAND_INTERVALS.map((brand) => (
                   <div
-                    key={interval.brand}
-                    className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 p-2 sm:p-3"
+                    key={brand.brand}
+                    className="rounded-lg border border-gray-100 bg-gray-50 p-3"
                   >
-                    <span className="truncate text-sm font-medium text-gray-900 sm:text-base">{interval.brand}</span>
-                    <span className="shrink-0 text-xs font-semibold text-blue-600 sm:text-sm">
-                      {(interval.interval / 1000).toFixed(0)}k km
-                    </span>
+                    <h4 className="font-semibold text-gray-900 mb-2">{brand.brand}</h4>
+                    <div className="space-y-1">
+                      {brand.intervals.map((interval, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-sm">
+                          <span className="text-gray-600">{interval.name}</span>
+                          <span className="font-semibold text-blue-600">
+                            {(interval.interval / 1000).toFixed(0)}k km
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -110,7 +115,7 @@ export default function RevisoesPage() {
           </Card>
 
           {/* Visualização de Revisões */}
-          <RevisionView vehicles={vehiclesWithRevision} />
+          <RevisionView vehicles={vehiclesWithRevision} onRefresh={refresh} />
         </main>
       </div>
     </div>

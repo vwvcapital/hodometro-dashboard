@@ -117,6 +117,27 @@ export function configsToIntervals(configs: RevisionConfigRow[]): RevisionInterv
   }));
 }
 
+// Retorna todos os intervalos de revisão agrupados por marca (completa e intermediária)
+export interface BrandRevisionIntervals {
+  brand: string;
+  intervals: { name: string; interval: number }[];
+}
+
+export function configsToFullIntervals(configs: RevisionConfigRow[]): BrandRevisionIntervals[] {
+  const brandMap = new Map<string, { name: string; interval: number }[]>();
+  
+  configs.forEach((config) => {
+    const existing = brandMap.get(config.brand) || [];
+    existing.push({ name: config.revision_name, interval: config.interval_km });
+    brandMap.set(config.brand, existing);
+  });
+  
+  return Array.from(brandMap.entries()).map(([brand, intervals]) => ({
+    brand,
+    intervals: intervals.sort((a, b) => a.interval - b.interval),
+  }));
+}
+
 // Converte dados do Supabase para o formato Vehicle
 function mapRowToVehicle(row: HodometroRow): Vehicle {
   return {

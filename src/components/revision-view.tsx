@@ -23,6 +23,7 @@ import { RevisionDialog } from "@/components/revision-dialog";
 
 interface RevisionViewProps {
   vehicles: VehicleWithRevision[];
+  onRefresh?: () => void;
 }
 
 function getStatusConfig(status: VehicleWithRevision["revisionStatus"]) {
@@ -99,7 +100,7 @@ function ProgressBar({
   );
 }
 
-function RevisionCard({ vehicle }: { vehicle: VehicleWithRevision }) {
+function RevisionCard({ vehicle, onRefresh }: { vehicle: VehicleWithRevision; onRefresh?: () => void }) {
   const statusConfig = getStatusConfig(vehicle.revisionStatus);
   const StatusIcon = statusConfig.icon;
 
@@ -179,13 +180,13 @@ function RevisionCard({ vehicle }: { vehicle: VehicleWithRevision }) {
         </div>
 
         {/* Action Button */}
-        <RevisionDialog vehicle={vehicle} />
+        <RevisionDialog vehicle={vehicle} onSuccess={onRefresh} />
       </CardContent>
     </Card>
   );
 }
 
-export function RevisionView({ vehicles }: RevisionViewProps) {
+export function RevisionView({ vehicles, onRefresh }: RevisionViewProps) {
   const [viewMode, setViewMode] = useState<"card" | "list">("card");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -285,11 +286,11 @@ export function RevisionView({ vehicles }: RevisionViewProps) {
       ) : viewMode === "card" ? (
         <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredVehicles.map((vehicle, index) => (
-            <RevisionCard key={`${vehicle.PLACA}-${index}`} vehicle={vehicle} />
+            <RevisionCard key={`${vehicle.PLACA}-${index}`} vehicle={vehicle} onRefresh={onRefresh} />
           ))}
         </div>
       ) : (
-        <RevisionListView vehicles={filteredVehicles} />
+        <RevisionListView vehicles={filteredVehicles} onRefresh={onRefresh} />
       )}
     </div>
   );
@@ -305,7 +306,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-function RevisionListView({ vehicles }: { vehicles: VehicleWithRevision[] }) {
+function RevisionListView({ vehicles, onRefresh }: { vehicles: VehicleWithRevision[]; onRefresh?: () => void }) {
   return (
     <Card className="bg-white shadow-sm">
       <CardContent className="p-0 sm:p-6">
@@ -359,7 +360,7 @@ function RevisionListView({ vehicles }: { vehicles: VehicleWithRevision[] }) {
                       : `${formatKm(vehicle.kmUntilRevision)} restantes`
                     }
                   </span>
-                  <RevisionDialog vehicle={vehicle} />
+                  <RevisionDialog vehicle={vehicle} onSuccess={onRefresh} />
                 </div>
               </div>
             );
@@ -442,7 +443,7 @@ function RevisionListView({ vehicles }: { vehicles: VehicleWithRevision[] }) {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <RevisionDialog vehicle={vehicle} />
+                      <RevisionDialog vehicle={vehicle} onSuccess={onRefresh} />
                     </TableCell>
                   </TableRow>
                 );
