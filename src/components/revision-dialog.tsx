@@ -31,7 +31,7 @@ interface RevisionDialogProps {
 
 export function RevisionDialog({ vehicle }: RevisionDialogProps) {
   const [open, setOpen] = useState(false);
-  const [revisaoKm, setRevisaoKm] = useState(vehicle.HODOMETRO.toString());
+  const [revisaoKm, setRevisaoKm] = useState("");
   const [revisaoTipo, setRevisaoTipo] = useState<"Completa" | "Intermediária">(
     vehicle.nextRevisionType || "Completa"
   );
@@ -55,7 +55,7 @@ export function RevisionDialog({ vehicle }: RevisionDialogProps) {
     if (result.success) {
       setOpen(false);
       // Reset form
-      setRevisaoKm(vehicle.HODOMETRO.toString());
+      setRevisaoKm("");
       setRevisaoTipo(vehicle.nextRevisionType || "Completa");
     } else {
       setError(result.error || "Erro ao registrar revisão");
@@ -106,16 +106,28 @@ export function RevisionDialog({ vehicle }: RevisionDialogProps) {
                   <p className="font-medium text-gray-900">{formatKm(vehicle.HODOMETRO)}</p>
                 </div>
                 <div>
+                  <span className="text-gray-500">Última Revisão:</span>
+                  <p className="font-medium text-gray-900">
+                    {vehicle.ULTIMA_REVISAO_KM ? formatKm(vehicle.ULTIMA_REVISAO_KM) : "Não registrada"}
+                  </p>
+                </div>
+                <div>
                   <span className="text-gray-500">Intervalo de Revisão:</span>
                   <p className="font-medium text-blue-600">{formatKm(vehicle.revisionInterval)}</p>
                 </div>
+                {vehicle.ULTIMA_REVISAO_TIPO && (
+                  <div>
+                    <span className="text-gray-500">Tipo Última Revisão:</span>
+                    <p className="font-medium text-gray-900">{vehicle.ULTIMA_REVISAO_TIPO}</p>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Revision KM Input */}
             <div className="space-y-2">
               <Label htmlFor="revisao-km" className="text-gray-700">
-                Quilometragem da Revisão
+                Em qual quilometragem a revisão foi realizada?
               </Label>
               <div className="relative">
                 <Input
@@ -123,7 +135,7 @@ export function RevisionDialog({ vehicle }: RevisionDialogProps) {
                   type="number"
                   value={revisaoKm}
                   onChange={(e) => setRevisaoKm(e.target.value)}
-                  placeholder="Ex: 500000"
+                  placeholder={`Ex: ${Math.floor(vehicle.HODOMETRO / 10000) * 10000}`}
                   className="pr-12"
                   min={0}
                   required
@@ -133,8 +145,8 @@ export function RevisionDialog({ vehicle }: RevisionDialogProps) {
                 </span>
               </div>
               <p className="text-xs text-gray-500">
-                Informe a quilometragem em que a revisão foi realizada.
-                A próxima revisão será calculada automaticamente.
+                Informe o km do hodômetro no momento em que a revisão foi feita.
+                Ex: Se o caminhão fez revisão quando estava com 250.000 km, digite 250000.
               </p>
             </div>
 
