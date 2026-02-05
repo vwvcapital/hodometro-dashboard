@@ -210,7 +210,7 @@ export function Sidebar({ vehicleCount }: SidebarProps) {
       </div>
 
       {/* Desktop sidebar */}
-      <div className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r bg-white lg:flex">
+      <div className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r bg-white lg:flex">
         <SidebarContent />
       </div>
     </>
