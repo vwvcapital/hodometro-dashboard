@@ -73,7 +73,7 @@ export function RevisionDialog({ vehicle }: RevisionDialogProps) {
           className="h-8 gap-1 text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700"
         >
           <Wrench className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Registrar Revisão</span>
+          <span className="hidden sm:inline">Atualizar Revisão</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -81,11 +81,11 @@ export function RevisionDialog({ vehicle }: RevisionDialogProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Wrench className="h-5 w-5 text-blue-600" />
-              Registrar Nova Revisão
+              Registrar Última Revisão
             </DialogTitle>
             <DialogDescription>
-              Registre a revisão realizada para o veículo <strong>{vehicle.PLACA}</strong>.
-              Isso irá reiniciar o ciclo de revisão.
+              Informe os dados da última revisão realizada para o veículo <strong>{vehicle.PLACA}</strong>.
+              Use este formulário para registrar revisões feitas anteriormente que ainda não foram cadastradas no sistema.
             </DialogDescription>
           </DialogHeader>
 
