@@ -13,12 +13,15 @@ import { Bell, ChevronDown, User, LogOut, Settings } from "lucide-react";
 
 export function Header() {
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-white px-6">
+    <header className="flex h-16 items-center justify-between border-b bg-white px-4 lg:px-6">
+      {/* Spacer for mobile menu button */}
+      <div className="w-10 lg:hidden" />
+      
       <div className="flex items-center gap-4">
         {/* Breadcrumb or page title can go here */}
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5 text-gray-600" />
@@ -39,11 +42,11 @@ export function Header() {
                   AD
                 </AvatarFallback>
               </Avatar>
-              <div className="flex flex-col items-start text-sm">
+              <div className="hidden flex-col items-start text-sm sm:flex">
                 <span className="font-medium text-gray-900">Administrador</span>
                 <span className="text-xs text-gray-500">Administrador</span>
               </div>
-              <ChevronDown className="h-4 w-4 text-gray-400" />
+              <ChevronDown className="hidden h-4 w-4 text-gray-400 sm:block" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">

@@ -17,9 +17,9 @@ export default function FrotaPage() {
     return (
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar vehicleCount={0} />
-        <div className="flex flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col">
           <Header />
-          <main className="flex flex-1 items-center justify-center">
+          <main className="flex flex-1 items-center justify-center p-4">
             <div className="flex flex-col items-center gap-3">
               <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
               <p className="text-gray-500">Carregando dados...</p>
@@ -34,18 +34,18 @@ export default function FrotaPage() {
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar vehicleCount={stats.totalVehicles} />
       
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <Header />
         
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-x-hidden p-4 sm:p-6">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Frota de Veículos</h1>
-            <p className="text-gray-500">
+            <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">Frota de Veículos</h1>
+            <p className="text-sm text-gray-500 sm:text-base">
               Visualize todos os veículos da sua frota
             </p>
           </div>
 
-          <div className="mb-6 grid gap-4 md:grid-cols-4">
+          <div className="mb-6 grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
             <StatsCard
               title="Total de Veículos"
               value={formatNumber(stats.totalVehicles)}

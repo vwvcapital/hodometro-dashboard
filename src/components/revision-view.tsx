@@ -283,7 +283,7 @@ export function RevisionView({ vehicles }: RevisionViewProps) {
           </CardContent>
         </Card>
       ) : viewMode === "card" ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredVehicles.map((vehicle, index) => (
             <RevisionCard key={`${vehicle.PLACA}-${index}`} vehicle={vehicle} />
           ))}
@@ -308,8 +308,66 @@ import {
 function RevisionListView({ vehicles }: { vehicles: VehicleWithRevision[] }) {
   return (
     <Card className="bg-white shadow-sm">
-      <CardContent className="p-0">
-        <div className="overflow-x-auto">
+      <CardContent className="p-0 sm:p-6">
+        {/* Mobile card view */}
+        <div className="space-y-3 p-4 sm:hidden">
+          {vehicles.map((vehicle, index) => {
+            const statusConfig = getStatusConfig(vehicle.revisionStatus);
+            const StatusIcon = statusConfig.icon;
+            return (
+              <div
+                key={`${vehicle.PLACA}-${index}`}
+                className={cn(
+                  "rounded-lg border-l-4 bg-gray-50 p-3",
+                  statusConfig.borderColor
+                )}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-bold text-gray-900">{vehicle.PLACA}</span>
+                  <Badge 
+                    className={cn(
+                      "flex items-center gap-1",
+                      statusConfig.bgColor,
+                      statusConfig.textColor
+                    )}
+                  >
+                    <StatusIcon className="h-3 w-3" />
+                    {statusConfig.label}
+                  </Badge>
+                </div>
+                <p className="text-sm text-gray-600 truncate mb-2">{vehicle.MODELO}</p>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span className="text-gray-500">Hodômetro:</span>
+                    <span className="ml-1 font-medium text-gray-900">{formatKm(vehicle.HODOMETRO)}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">Próxima:</span>
+                    <span className="ml-1 font-medium text-blue-600">{formatKm(vehicle.nextRevisionKm)}</span>
+                  </div>
+                </div>
+                <div className="mt-2 flex items-center justify-between">
+                  <span className={cn(
+                    "text-sm font-bold",
+                    vehicle.kmUntilRevision <= 0 ? "text-purple-600" :
+                    vehicle.kmUntilRevision <= 2000 ? "text-red-600" :
+                    vehicle.kmUntilRevision <= 5000 ? "text-amber-600" :
+                    "text-green-600"
+                  )}>
+                    {vehicle.kmUntilRevision <= 0 
+                      ? `${formatKm(Math.abs(vehicle.kmUntilRevision))} atrás`
+                      : `${formatKm(vehicle.kmUntilRevision)} restantes`
+                    }
+                  </span>
+                  <RevisionDialog vehicle={vehicle} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* Desktop table view */}
+        <div className="hidden overflow-x-auto sm:block">
           <Table>
             <TableHeader>
               <TableRow className="border-b border-gray-100">

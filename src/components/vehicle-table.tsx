@@ -30,13 +30,37 @@ export function VehicleTable({ vehicles }: VehicleTableProps) {
   return (
     <Card className="bg-white shadow-sm">
       <CardHeader className="flex flex-row items-center gap-2 pb-4">
-        <Truck className="h-5 w-5 text-blue-600" />
-        <CardTitle className="text-lg font-semibold text-gray-900">
+        <Truck className="h-5 w-5 shrink-0 text-blue-600" />
+        <CardTitle className="text-base font-semibold text-gray-900 sm:text-lg">
           Frota de Veículos
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="overflow-x-auto">
+      <CardContent className="p-0 sm:p-6 sm:pt-0">
+        {/* Mobile card view */}
+        <div className="space-y-3 p-4 sm:hidden">
+          {vehicles.map((vehicle, index) => {
+            const status = getOdometerStatus(vehicle.HODOMETRO);
+            return (
+              <div
+                key={`${vehicle.PLACA}-${index}`}
+                className="rounded-lg border border-gray-100 bg-gray-50 p-3"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-bold text-gray-900">{vehicle.PLACA}</span>
+                  <Badge variant={status.variant}>{status.label}</Badge>
+                </div>
+                <p className="text-sm text-gray-600 truncate mb-1">{vehicle.MODELO}</p>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">{vehicle.MARCA} · {vehicle.TIPO}</span>
+                  <span className="font-semibold text-gray-900">{formatKm(vehicle.HODOMETRO)}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* Desktop table view */}
+        <div className="hidden overflow-x-auto sm:block">
           <Table>
             <TableHeader>
               <TableRow className="border-b border-gray-100">
@@ -71,7 +95,7 @@ export function VehicleTable({ vehicles }: VehicleTableProps) {
                     <TableCell className="font-medium text-gray-900">
                       {vehicle.PLACA}
                     </TableCell>
-                    <TableCell className="text-gray-600">
+                    <TableCell className="max-w-[200px] truncate text-gray-600">
                       {vehicle.MODELO}
                     </TableCell>
                     <TableCell className="text-gray-600">

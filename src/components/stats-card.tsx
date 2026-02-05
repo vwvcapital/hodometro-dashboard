@@ -21,20 +21,20 @@ export function StatsCard({
 }: StatsCardProps) {
   return (
     <Card className="bg-white shadow-sm">
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-gray-500">{title}</p>
-            <p className="text-3xl font-bold text-gray-900">{value}</p>
-            <p className="text-sm text-gray-400">{subtitle}</p>
+      <CardContent className="p-4 sm:p-6">
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0 flex-1 space-y-0.5 sm:space-y-1">
+            <p className="truncate text-xs font-medium text-gray-500 sm:text-sm">{title}</p>
+            <p className="truncate text-xl font-bold text-gray-900 sm:text-3xl">{value}</p>
+            <p className="truncate text-xs text-gray-400 sm:text-sm">{subtitle}</p>
           </div>
           <div
             className={cn(
-              "flex h-12 w-12 items-center justify-center rounded-xl",
+              "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl sm:h-12 sm:w-12",
               iconBgColor
             )}
           >
-            <Icon className={cn("h-6 w-6", iconColor)} />
+            <Icon className={cn("h-5 w-5 sm:h-6 sm:w-6", iconColor)} />
           </div>
         </div>
       </CardContent>

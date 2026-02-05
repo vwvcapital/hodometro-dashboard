@@ -53,36 +53,36 @@ export function OdometerRow({ vehicle }: OdometerRowProps) {
       "transition-all",
       saved && "ring-2 ring-green-500 bg-green-50"
     )}>
-      <CardContent className="flex items-center gap-4 p-4">
+      <CardContent className="flex flex-wrap items-center gap-3 p-3 sm:flex-nowrap sm:gap-4 sm:p-4">
         {/* Vehicle Info */}
-        <div className="flex items-center gap-3 min-w-[200px]">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-            <Gauge className="h-5 w-5 text-blue-600" />
+        <div className="flex items-center gap-3 min-w-0 flex-1 sm:min-w-[200px] sm:flex-initial">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-100 sm:h-10 sm:w-10">
+            <Gauge className="h-4 w-4 text-blue-600 sm:h-5 sm:w-5" />
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="font-bold text-gray-900">{vehicle.PLACA}</p>
-            <p className="text-xs text-gray-500">{vehicle.MARCA}</p>
+            <p className="truncate text-xs text-gray-500">{vehicle.MARCA}</p>
           </div>
         </div>
 
         {/* Model */}
-        <div className="flex-1 hidden sm:block">
+        <div className="hidden flex-1 sm:block">
           <p className="text-sm text-gray-600 truncate" title={vehicle.MODELO}>
             {vehicle.MODELO}
           </p>
         </div>
 
         {/* Odometer Edit */}
-        <div className="flex items-center gap-2">
+        <div className="flex w-full items-center gap-2 sm:w-auto">
           {isEditing ? (
             <>
-              <div className="relative">
+              <div className="relative flex-1 sm:flex-initial">
                 <Input
                   type="number"
                   value={newKm}
                   onChange={(e) => setNewKm(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="w-32 pr-10"
+                  className="w-full pr-10 sm:w-32"
                   autoFocus
                   min={0}
                 />
@@ -95,7 +95,7 @@ export function OdometerRow({ vehicle }: OdometerRowProps) {
                 variant="ghost"
                 onClick={handleSave}
                 disabled={isLoading}
-                className="h-9 w-9 text-green-600 hover:bg-green-50 hover:text-green-700"
+                className="h-9 w-9 shrink-0 text-green-600 hover:bg-green-50 hover:text-green-700"
               >
                 {isLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -108,14 +108,14 @@ export function OdometerRow({ vehicle }: OdometerRowProps) {
                 variant="ghost"
                 onClick={handleCancel}
                 disabled={isLoading}
-                className="h-9 w-9 text-gray-500 hover:bg-gray-100"
+                className="h-9 w-9 shrink-0 text-gray-500 hover:bg-gray-100"
               >
                 <X className="h-4 w-4" />
               </Button>
             </>
           ) : (
             <>
-              <div className="text-right min-w-[120px]">
+              <div className="flex-1 text-right sm:min-w-[120px] sm:flex-initial">
                 <p className="font-semibold text-gray-900">{formatKm(vehicle.HODOMETRO)}</p>
               </div>
               <Button

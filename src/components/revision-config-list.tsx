@@ -136,18 +136,18 @@ export function RevisionConfigList({ configs }: RevisionConfigListProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-base font-semibold text-gray-900 sm:text-lg">
             Ciclos de Revisão por Marca
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-xs text-gray-500 sm:text-sm">
             Configure os intervalos de cada tipo de revisão para cada marca de veículo
           </p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openAddDialog} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={openAddDialog} className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
               <Plus className="mr-2 h-4 w-4" />
               Novo Ciclo
             </Button>
@@ -228,18 +228,18 @@ export function RevisionConfigList({ configs }: RevisionConfigListProps) {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {brands.map((brand) => {
             const brandConfigs = groupedConfigs.get(brand) || [];
             return (
               <Card key={brand} className="overflow-hidden">
                 <CardHeader className="bg-gray-50 pb-3">
-                  <CardTitle className="flex items-center gap-2 text-base">
-                    <Wrench className="h-5 w-5 text-blue-600" />
-                    {brand}
+                  <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+                    <Wrench className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-blue-600" />
+                    <span className="truncate">{brand}</span>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-4">
+                <CardContent className="p-3 sm:pt-4">
                   <div className="space-y-3">
                     {brandConfigs.map((config) => (
                       <div

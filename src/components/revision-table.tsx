@@ -30,6 +30,7 @@ function getStatusConfig(status: VehicleWithRevision["revisionStatus"]) {
         icon: XCircle,
         bgColor: "bg-purple-100",
         textColor: "text-purple-700",
+        borderColor: "border-purple-200",
       };
     case "critical":
       return {
@@ -38,6 +39,7 @@ function getStatusConfig(status: VehicleWithRevision["revisionStatus"]) {
         icon: AlertTriangle,
         bgColor: "bg-red-100",
         textColor: "text-red-700",
+        borderColor: "border-red-200",
       };
     case "warning":
       return {
@@ -46,6 +48,7 @@ function getStatusConfig(status: VehicleWithRevision["revisionStatus"]) {
         icon: Clock,
         bgColor: "bg-amber-100",
         textColor: "text-amber-700",
+        borderColor: "border-amber-200",
       };
     case "ok":
     default:
@@ -55,6 +58,7 @@ function getStatusConfig(status: VehicleWithRevision["revisionStatus"]) {
         icon: CheckCircle,
         bgColor: "bg-green-100",
         textColor: "text-green-700",
+        borderColor: "border-green-200",
       };
   }
 }
@@ -101,13 +105,71 @@ export function RevisionTable({ vehicles, showAll = false }: RevisionTableProps)
   return (
     <Card className="bg-white shadow-sm">
       <CardHeader className="flex flex-row items-center gap-2 pb-4">
-        <Wrench className="h-5 w-5 text-blue-600" />
-        <CardTitle className="text-lg font-semibold text-gray-900">
+        <Wrench className="h-5 w-5 shrink-0 text-blue-600" />
+        <CardTitle className="text-base font-semibold text-gray-900 sm:text-lg">
           Próximas Revisões
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="overflow-x-auto">
+      <CardContent className="p-0 sm:p-6 sm:pt-0">
+        {/* Mobile card view */}
+        <div className="space-y-3 p-4 sm:hidden">
+          {displayVehicles.map((vehicle, index) => {
+            const statusConfig = getStatusConfig(vehicle.revisionStatus);
+            const StatusIcon = statusConfig.icon;
+            return (
+              <div
+                key={`${vehicle.PLACA}-${index}`}
+                className={cn(
+                  "rounded-lg border-l-4 bg-gray-50 p-3",
+                  statusConfig.borderColor
+                )}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-bold text-gray-900">{vehicle.PLACA}</span>
+                  <Badge 
+                    className={cn(
+                      "flex items-center gap-1",
+                      statusConfig.bgColor,
+                      statusConfig.textColor
+                    )}
+                  >
+                    <StatusIcon className="h-3 w-3" />
+                    {statusConfig.label}
+                  </Badge>
+                </div>
+                <p className="text-sm text-gray-600 truncate mb-2">{vehicle.MODELO}</p>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span className="text-gray-500">Hodômetro:</span>
+                    <span className="ml-1 font-medium text-gray-900">{formatKm(vehicle.HODOMETRO)}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">Próxima:</span>
+                    <span className="ml-1 font-medium text-blue-600">{formatKm(vehicle.nextRevisionKm)}</span>
+                  </div>
+                </div>
+                <div className="mt-2 flex items-center justify-between">
+                  <span className={cn(
+                    "text-sm font-bold",
+                    vehicle.kmUntilRevision <= 0 ? "text-purple-600" :
+                    vehicle.kmUntilRevision <= 2000 ? "text-red-600" :
+                    vehicle.kmUntilRevision <= 5000 ? "text-amber-600" :
+                    "text-green-600"
+                  )}>
+                    {vehicle.kmUntilRevision <= 0 
+                      ? `${formatKm(Math.abs(vehicle.kmUntilRevision))} atrás`
+                      : `${formatKm(vehicle.kmUntilRevision)} restantes`
+                    }
+                  </span>
+                  <RevisionDialog vehicle={vehicle} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* Desktop table view */}
+        <div className="hidden overflow-x-auto sm:block">
           <Table>
             <TableHeader>
               <TableRow className="border-b border-gray-100">
