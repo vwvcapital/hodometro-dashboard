@@ -1,0 +1,68 @@
+"use client";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Bell, ChevronDown, User, LogOut, Settings } from "lucide-react";
+
+export function Header() {
+  return (
+    <header className="flex h-16 items-center justify-between border-b bg-white px-6">
+      <div className="flex items-center gap-4">
+        {/* Breadcrumb or page title can go here */}
+      </div>
+
+      <div className="flex items-center gap-4">
+        {/* Notifications */}
+        <Button variant="ghost" size="icon" className="relative">
+          <Bell className="h-5 w-5 text-gray-600" />
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
+            3
+          </span>
+        </Button>
+
+        {/* User Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 px-2 hover:bg-gray-100"
+            >
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-blue-100 text-blue-600">
+                  AD
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col items-start text-sm">
+                <span className="font-medium text-gray-900">Administrador</span>
+                <span className="text-xs text-gray-500">Administrador</span>
+              </div>
+              <ChevronDown className="h-4 w-4 text-gray-400" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              Meu Perfil
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              Configurações
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-red-600">
+              <LogOut className="mr-2 h-4 w-4" />
+              Sair
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
+  );
+}
