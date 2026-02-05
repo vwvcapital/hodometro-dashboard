@@ -16,6 +16,7 @@ function mapRowToVehicle(row: any): Vehicle {
     MARCA: row.marca || "",
     MODELO: row.modelo || "",
     ULTIMA_REVISAO_KM: row.ultima_revisao_km || undefined,
+    ULTIMA_REVISAO_TIPO: row.ultima_revisao_tipo || undefined,
     UPDATED_AT: row.updated_at || undefined,
   };
 }

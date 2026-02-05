@@ -57,6 +57,8 @@ export function RevisionDialog({ vehicle }: RevisionDialogProps) {
       // Reset form
       setRevisaoKm("");
       setRevisaoTipo(vehicle.nextRevisionType || "Completa");
+      // Refresh the page to show updated data
+      window.location.reload();
     } else {
       setError(result.error || "Erro ao registrar revisão");
     }
