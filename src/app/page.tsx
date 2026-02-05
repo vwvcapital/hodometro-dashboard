@@ -7,9 +7,10 @@ import { Header } from "@/components/header";
 import { StatsCard } from "@/components/stats-card";
 import { DonutChart } from "@/components/donut-chart";
 import { RevisionTable } from "@/components/revision-table";
+import { AuthGuard } from "@/components/auth-guard";
 import { Truck, AlertTriangle, Clock, CheckCircle, XCircle, Loader2 } from "lucide-react";
 
-export default function DashboardPage() {
+function DashboardContent() {
   const { vehiclesWithRevision, loading, error, refresh } = useVehicles();
   const stats = calculateRevisionStats(vehiclesWithRevision);
 
@@ -120,5 +121,13 @@ export default function DashboardPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <AuthGuard>
+      <DashboardContent />
+    </AuthGuard>
   );
 }

@@ -6,9 +6,10 @@ import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { VehicleTable } from "@/components/vehicle-table";
 import { StatsCard } from "@/components/stats-card";
+import { AuthGuard } from "@/components/auth-guard";
 import { Truck, Gauge, AlertTriangle, Wrench, Loader2 } from "lucide-react";
 
-export default function FrotaPage() {
+function FrotaContent() {
   const { vehicles, vehiclesWithRevision, loading, error } = useVehicles();
   const revisionStats = calculateRevisionStats(vehiclesWithRevision);
   const stats = calculateStats(vehicles);
@@ -84,5 +85,13 @@ export default function FrotaPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function FrotaPage() {
+  return (
+    <AuthGuard>
+      <FrotaContent />
+    </AuthGuard>
   );
 }

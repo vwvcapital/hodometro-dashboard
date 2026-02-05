@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/auth-context";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -12,6 +14,18 @@ import { Button } from "@/components/ui/button";
 import { Bell, ChevronDown, User, LogOut, Settings } from "lucide-react";
 
 export function Header() {
+  const router = useRouter();
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
+
+  const getInitials = (name: string) => {
+    return name.slice(0, 2).toUpperCase();
+  };
+
   return (
     <header className="flex h-16 items-center justify-between border-b bg-white px-4 lg:px-6">
       {/* Spacer for mobile menu button */}
@@ -39,11 +53,13 @@ export function Header() {
             >
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-blue-100 text-blue-600">
-                  AD
+                  {user ? getInitials(user.usuario) : "US"}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden flex-col items-start text-sm sm:flex">
-                <span className="font-medium text-gray-900">Administrador</span>
+                <span className="font-medium text-gray-900">
+                  {user?.usuario || "Usuário"}
+                </span>
                 <span className="text-xs text-gray-500">Administrador</span>
               </div>
               <ChevronDown className="hidden h-4 w-4 text-gray-400 sm:block" />
@@ -59,7 +75,7 @@ export function Header() {
               Configurações
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-600">
+            <DropdownMenuItem className="text-red-600" onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               Sair
             </DropdownMenuItem>

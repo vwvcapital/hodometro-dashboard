@@ -7,9 +7,10 @@ import { Header } from "@/components/header";
 import { RevisionView } from "@/components/revision-view";
 import { StatsCard } from "@/components/stats-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AuthGuard } from "@/components/auth-guard";
 import { CheckCircle, Clock, AlertTriangle, XCircle, Wrench, Loader2 } from "lucide-react";
 
-export default function RevisoesPage() {
+function RevisoesContent() {
   const { vehiclesWithRevision, revisionConfigs, loading, refresh } = useVehicles();
   const stats = calculateRevisionStats(vehiclesWithRevision);
   const BRAND_INTERVALS = configsToFullIntervals(revisionConfigs);
@@ -119,5 +120,13 @@ export default function RevisoesPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function RevisoesPage() {
+  return (
+    <AuthGuard>
+      <RevisoesContent />
+    </AuthGuard>
   );
 }

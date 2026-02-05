@@ -6,9 +6,10 @@ import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { StatsCard } from "@/components/stats-card";
 import { OdometerList } from "@/components/odometer-list";
+import { AuthGuard } from "@/components/auth-guard";
 import { Gauge, Truck, TrendingUp, Loader2 } from "lucide-react";
 
-export default function HodometrosPage() {
+function HodometrosContent() {
   const { vehicles, loading } = useVehicles();
   const stats = calculateStats(vehicles);
 
@@ -91,5 +92,13 @@ export default function HodometrosPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function HodometrosPage() {
+  return (
+    <AuthGuard>
+      <HodometrosContent />
+    </AuthGuard>
   );
 }

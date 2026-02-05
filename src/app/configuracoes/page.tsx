@@ -4,9 +4,10 @@ import { useRevisionConfigs } from "@/hooks/use-vehicles";
 import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { RevisionConfigList } from "@/components/revision-config-list";
+import { AuthGuard } from "@/components/auth-guard";
 import { Loader2 } from "lucide-react";
 
-export default function ConfiguracoesPage() {
+function ConfiguracoesContent() {
   const { configs, loading } = useRevisionConfigs();
 
   if (loading) {
@@ -38,5 +39,13 @@ export default function ConfiguracoesPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function ConfiguracoesPage() {
+  return (
+    <AuthGuard>
+      <ConfiguracoesContent />
+    </AuthGuard>
   );
 }
