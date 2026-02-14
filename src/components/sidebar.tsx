@@ -12,6 +12,7 @@ import {
   Wrench,
   Menu,
   X,
+  FileUp,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,11 @@ const menuItems = [
         name: "Hodômetros",
         href: "/hodometros",
         icon: Gauge,
+      },
+      {
+        name: "Importar Hodômetros",
+        href: "/importar",
+        icon: FileUp,
       },
       {
         name: "Revisões",

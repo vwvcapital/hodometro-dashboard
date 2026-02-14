@@ -100,6 +100,53 @@ export async function updateRevisionConfig(
   }
 }
 
+export async function bulkUpdateOdometers(
+  updates: { placa: string; hodometroKm: number }[]
+): Promise<{ success: boolean; updated: number; notFound: string[]; errors: string[] }> {
+  const notFound: string[] = [];
+  const errors: string[] = [];
+  let updated = 0;
+
+  for (const { placa, hodometroKm } of updates) {
+    try {
+      // First check if the vehicle exists
+      const { data: existing } = await supabase
+        .from("hodometro")
+        .select("placa, hodometro_km")
+        .eq("placa", placa)
+        .maybeSingle();
+
+      if (!existing) {
+        notFound.push(placa);
+        continue;
+      }
+
+      const { error } = await supabase
+        .from("hodometro")
+        .update({
+          hodometro_km: hodometroKm,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("placa", placa);
+
+      if (error) {
+        errors.push(`${placa}: ${error.message}`);
+      } else {
+        updated++;
+      }
+    } catch (err) {
+      errors.push(`${placa}: Erro inesperado`);
+    }
+  }
+
+  return {
+    success: errors.length === 0,
+    updated,
+    notFound,
+    errors,
+  };
+}
+
 export async function deleteRevisionConfig(id: string) {
   try {
     const { error } = await supabase
