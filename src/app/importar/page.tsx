@@ -72,7 +72,8 @@ function ImportContent() {
         // Skip header row (index 0), process data rows
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
-          const rawPlaca = String(row[1] ?? "").trim().toUpperCase();
+          // Remove sufixo após hífen (ex: "RCD8C19-2" → "RCD8C19")
+          const rawPlaca = String(row[1] ?? "").trim().toUpperCase().replace(/-\d+$/, "");
           const rawHodometro = row[4];
 
           if (!rawPlaca || rawPlaca === "") continue;
